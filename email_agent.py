@@ -1,19 +1,39 @@
 import streamlit as st
-import openai
+from openai import OpenAI, NotFoundError, RateLimitError
 
-client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI()
 
 def generate_email_response(email_text, tone):
     prompt = f"""
-You are an AI assistant. Write a reply to the following email using a {tone.lower()} tone:
+You are an AI assistant tasked with generating professional email replies.
+
+Tone: {tone}
 
 Email:
 {email_text}
 
 Reply:
 """
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}]
-    )
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}]
+        )
+    except NotFoundError:
+        # Fallback to GPT-3.5-turbo
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+    except RateLimitError:
+        return "⚠️ You have exceeded your OpenAI usage quota. Please check your billing details."
+
     return response.choices[0].message.content
+
+
+
+
+
+
+
