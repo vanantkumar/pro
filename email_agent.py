@@ -17,13 +17,13 @@ Reply:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="davinci-002",
             messages=[{"role": "user", "content": prompt}]
         )
     except NotFoundError:
         # Fallback to GPT-3.5-turbo
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-3.5-turbo-0613",
             messages=[{"role": "user", "content": prompt}]
         )
     except RateLimitError:
