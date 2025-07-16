@@ -12,17 +12,8 @@ Email:
 
 Reply:
 """
-     try:
-        # Try using GPT-4o first
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}]
-        )
-    except NotFoundError:
-        # Fallback to GPT-3.5-turbo if GPT-4 is not available
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
-        )
-
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}]
+    )
     return response.choices[0].message.content
